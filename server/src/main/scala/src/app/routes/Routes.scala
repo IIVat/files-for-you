@@ -1,20 +1,17 @@
 package src.app.routes
 
-import akka.Done
 import akka.http.javadsl.server.RouteResult
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{RequestContext, Route}
-import akka.stream.scaladsl.{Flow, Sink, Source}
-import src.app.{ClientStatus, CpuRawData}
-import src.app.CpuMonitoringApp._
+import akka.stream.scaladsl.{Flow, Source}
 import src.app.services.{ClientsService, CpuReportService}
+import src.app.{ClientStatus, CpuRawData}
 
 import java.time.Instant
 import java.util.UUID
 import scala.concurrent.Future
-import scala.concurrent.duration.DurationInt
 import scala.util.{Failure, Success}
 
 trait Routes[Context, Result] {
