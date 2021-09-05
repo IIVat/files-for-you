@@ -1,26 +1,21 @@
-package src.app.services
+package app.services
 
-import src.app.{ClientStatus, CpuRawData}
+import app.ClientStatus
 
 import java.time.Instant
-import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import scala.concurrent.Future
 import scala.jdk.CollectionConverters._
 
-trait ClientsService {
+trait ClientsStatusService {
   def saveStatus(status: ClientStatus): Future[Int]
-  def aggregate(data: CpuRawData): Future[UUID]
 }
 
-class ClientsServiceImpl(/*Here must be DAO*/) extends ClientsService {
+class ClientsStatusServiceImpl(/*Here must be DAO*/) extends ClientsStatusService {
   // must be placed in DAO
   val alarmMap: collection.concurrent.Map[String, Instant] =
     new ConcurrentHashMap[String, Instant]().asScala
 
   override def saveStatus(status: ClientStatus): Future[Int] =
     Future.successful(1)
-
-  override def aggregate(data: CpuRawData): Future[UUID] =
-    Future.successful(data.cid)
 }

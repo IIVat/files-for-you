@@ -1,6 +1,6 @@
-package src.app.services
+package app.services
 
-import src.app.CpuReport
+import app.CpuReport
 
 import java.util.UUID
 import scala.concurrent.Future

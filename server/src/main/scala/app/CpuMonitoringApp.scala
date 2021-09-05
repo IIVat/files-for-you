@@ -1,14 +1,11 @@
-package src.app
+package app
 
-import akka.Done
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
-import akka.stream.scaladsl.{Flow, Sink, Source}
-import src.app.routes.MainRoutes
-import src.app.services.{ClientsService, ClientsServiceImpl, CpuReportServiceImpl}
+import app.routes.MainRoutes
 
-import scala.concurrent._
+import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.duration.DurationInt
 import scala.io.StdIn
 
 object CpuMonitoringApp extends App {
@@ -16,13 +13,9 @@ object CpuMonitoringApp extends App {
 
   implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
-  val mainRoutes =
-    MainRoutes(
-      new CpuReportServiceImpl(),
-      new ClientsServiceImpl()
-    )
+  private val config = Config(frequencies = Seq(1.minute, 15.seconds, 30.seconds))
 
-  val bindingFuture = Http().newServerAt("localhost", 9999).bind(mainRoutes.routes)
+  val bindingFuture = Http().newServerAt("localhost", 9999).bind(MainRoutes.init(config).routes)
 
   println(s"Server online at ws://localhost:9999/\nPress RETURN to stop...")
 
@@ -32,5 +25,3 @@ object CpuMonitoringApp extends App {
     .flatMap(_.unbind()) // trigger unbinding from the port
     .onComplete(_ => system.terminate()) // and shutdown when done
 }
-
-
